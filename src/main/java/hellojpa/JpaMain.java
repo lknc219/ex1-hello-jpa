@@ -28,14 +28,22 @@ public class JpaMain {
 
             //영속: 영속성 컨텍스트에 포함되어 관리 되는 상태
 
-            Member member = em.find(Member.class, 150L);
-            member.setName("AAAAAA");
+            Member member1 = new Member();
+            member1.setUsername("A");
+            Member member2 = new Member();
+            member2.setUsername("B");
+            Member member3 = new Member();
+            member3.setUsername("C");
+            System.out.println("====================");
 
-            em.clear();
-            Member member1 = em.find(Member.class, 150L);
+            em.persist(member1);
+            em.persist(member2);
+            em.persist(member3);
 
-            System.out.println("==========================");
-
+            System.out.println("member.getId() = " + member1.getId());
+            System.out.println("member.getId() = " + member2.getId());
+            System.out.println("member.getId() = " + member3.getId());
+            System.out.println("====================");
             tx.commit();
         }catch (Exception e){
             tx.rollback();

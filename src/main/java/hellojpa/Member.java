@@ -1,44 +1,40 @@
 package hellojpa;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 //@Table(name = "USER") //DB TEBLE 이름으로 바꾸고싶을때 기본은 클래스명과 같은 테이블을 찾는다.
 @Entity
+@SequenceGenerator(
+        name = "MEMBER_SEQ_GENERATOR",
+        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+        initialValue = 1, allocationSize = 50)
 public class Member {
 
-
     @Id
-    private long id;
-    //@Column(name = "username")//컬럼명을 username 을 찾도록 입력
-    private String name;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+        generator = "MEMBER_SEQ_GENERATOR")
+    private Long id;
 
-    //JPA는 기본생성자 필수
+    @Column(name = "name", nullable = false) //DB에 name 이고 객체는 username 일때
+    private String username;
 
-    public Member(){
-
-    }
-    public Member(long id, String name) {
-        this.id = id;
-        this.name = name;
+    public Member() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
