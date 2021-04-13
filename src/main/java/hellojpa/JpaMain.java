@@ -28,22 +28,35 @@ public class JpaMain {
 
             //영속: 영속성 컨텍스트에 포함되어 관리 되는 상태
 
-            Member member1 = new Member();
-            member1.setUsername("A");
-            Member member2 = new Member();
-            member2.setUsername("B");
-            Member member3 = new Member();
-            member3.setUsername("C");
-            System.out.println("====================");
+            //저장
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-            em.persist(member1);
-            em.persist(member2);
-            em.persist(member3);
+            Member member = new Member();
+            member.setUsername("Member1");
+            //연관관계의 주인에 값을 세팅해주는 부분 Member 와 Team 객체의 연관관계의 주인은 Member.team 이다
+            //setTeam -> changeTeam 으로 바꿔주면서 team을 셋팅할때 team.getMembers().add(this) 를 해줌으로
+            //양방향으로 셋팅을 하는 메서드로 만들어준다 (연관관계 편의 메서드라고 한다.)
+            member.changeTeam(team);
+            team.addMember(member);
+            em.persist(member);
 
-            System.out.println("member.getId() = " + member1.getId());
-            System.out.println("member.getId() = " + member2.getId());
-            System.out.println("member.getId() = " + member3.getId());
-            System.out.println("====================");
+            //연관관계의 주인은 아니지만 둘다 셋팅해주는게 좋다.
+            //DB에서 읽지않고 영속성 컨텍스트의 순수 객체를 읽을때 못 읽어오는 경우가 있기 떄문
+            //team.getMembers().add(member);
+
+//            em.flush();
+//            em.clear();
+
+            Team findTeam = em.find(Team.class, team.getId());
+            List<Member> members = findTeam.getMembers();
+
+            System.out.println("===========================");
+            for (Member m : members) {
+                System.out.println("m.get = " + m.getUsername());
+            }
+            System.out.println("===========================");
             tx.commit();
         }catch (Exception e){
             tx.rollback();
