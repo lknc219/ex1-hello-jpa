@@ -1,13 +1,14 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 //@Table(name = "USER") //DB TEBLE 이름으로 바꾸고싶을때 기본은 클래스명과 같은 테이블을 찾는다.
 @Entity
-public class Member {
+public class Member extends BaseEntity{
 
     @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
@@ -22,13 +23,6 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY) // 해당 객체가 M 매핑되는 객체가 1
     @JoinColumn(name = "TEAM_ID") //조인해야하는 컬럼 명
     private Team team;
-
-    @OneToOne
-    @JoinColumn(name = "LOCKER_ID")
-    private Locker locker;
-
-    @OneToMany(mappedBy = "member")
-    private List<MemberProduct> memberProducts = new ArrayList<MemberProduct>();
 
     public Long getId() {
         return id;
@@ -58,6 +52,5 @@ public class Member {
         this.team = team;
         team.getMembers().add(this); // 팀을 셋팅함과 동시에 해당 팀에 자신(Member)를 추가해준다.
     }
-
 
 }
