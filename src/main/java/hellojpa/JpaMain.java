@@ -37,21 +37,16 @@ public class JpaMain {
 
             //MappedSuperClass 는 엔티티가 아니기 때문에 조회가 안된다.
 
-            Child child1 = new Child();
-            Child child2 = new Child();
+            Address address = new Address("city", "street", "zipcode");
 
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
+            Member member = new Member();
+            member.setHomeAddress(address);
+            member.setUsername("member1");
+            em.persist(member);
 
-            em.persist(parent);
+            Address newAddress = new Address("NewCity", address.getStreet(), address.getStreet());
 
-
-            em.flush();
-            em.clear();
-
-            Parent findParent = em.find(Parent.class, parent.getId());
-            em.remove(findParent);
+            member.setHomeAddress(newAddress);
 
             tx.commit();
         }catch (Exception e){
@@ -63,20 +58,5 @@ public class JpaMain {
         emf.close();
     }
 
-    private static void logic(Member m1, Member m2) {
-        System.out.println("m1 instanceof Member = " + (m1 instanceof Member));
-        System.out.println("m2 instanceof Member = " + (m2 instanceof Member));
-    }
 
-    private static void printMember(Member member) {
-        member.getUsername();
-        System.out.println("member = " + member.getUsername());
-    }
-
-    private static void printMemberAndTeam(Member member) {
-        String username = member.getUsername();
-        System.out.println("username = " + username);
-        Team team = member.getTeam();
-        System.out.println("team = " + team.getName());
-    }
 }

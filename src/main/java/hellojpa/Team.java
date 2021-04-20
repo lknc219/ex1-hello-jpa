@@ -16,10 +16,10 @@ public class Team extends BaseEntity{
     @OneToMany(mappedBy = "team") //맵핑이 되는 곳의 변수명과 맵핑해준다 (Member.team) 읽기전용 가짜매핑
     private List<Member> members = new ArrayList<>(); //nullPoint 방지
 
-    public void addMember(Member member) {
-        member.setTeam(this);
-        members.add(member);
-    }
+//    public void addMember(Member member) {
+//        //member.setTeam(this);
+//        members.add(member);
+//    }
 
     public Long getId() {
         return id;
