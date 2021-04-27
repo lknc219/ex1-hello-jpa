@@ -7,6 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
 
@@ -37,7 +38,7 @@ public class JpaMain {
 
             //MappedSuperClass 는 엔티티가 아니기 때문에 조회가 안된다.
 
-            Address address = new Address("city", "street", "zipcode");
+            /*Address address = new Address("city", "street", "zipcode");
 
             Member member = new Member();
             member.setHomeAddress(address);
@@ -46,7 +47,39 @@ public class JpaMain {
 
             Address newAddress = new Address("NewCity", address.getStreet(), address.getStreet());
 
-            member.setHomeAddress(newAddress);
+            member.setHomeAddress(newAddress);*/
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homecity1", "street", "zipcode"));
+
+            member.getFavoritFoods().add("치킨");
+            member.getFavoritFoods().add("족발");
+            member.getFavoritFoods().add("피자");
+
+            // member.getAddressHistory().add(new Address("old1", "street", "zipcode"));
+            // member.getAddressHistory().add(new Address("old2", "street", "zipcode"));
+
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+            System.out.println("===============START=============");
+            Member findMember = em.find(Member.class, member.getId());
+
+
+            //homeCity -> newCity
+//            findMember.getHomeAddress().setCity("newCity");
+            Address a = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity",a.getStreet(),a.getZipcode()));
+
+            //치킨 -> 한식
+            findMember.getFavoritFoods().remove("치킨");
+            findMember.getFavoritFoods().add("한식");
+
+            //
+            findMember.getAddressHistory().remove(new AddressEntity("old1", "street", "zipcode"));
+            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street", "zipcode"));
 
             tx.commit();
         }catch (Exception e){
